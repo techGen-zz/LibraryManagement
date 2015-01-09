@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.AbstractDocument;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -19,11 +20,13 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.FileInputStream;
 
 import javax.swing.JTextArea;
 
 import com.toedter.calendar.JYearChooser;
 import com.toedter.calendar.JDateChooser;
+
 import javax.swing.JInternalFrame;
 
 public class HomeScreen extends JFrame {
@@ -47,7 +50,11 @@ public class HomeScreen extends JFrame {
 	private JYearChooser yearChooser;
 	private JTextArea textResAddress;
 	private JTextArea textInsAddress;
-	private File studentImage;
+	private File studentImageFile;
+	private FileNameExtensionFilter filter;
+	private JLabel imageLabel;
+	private String imagePath = null; 
+	byte b[];
 
 	/**
 	 * Launch the application.
@@ -222,6 +229,43 @@ public class HomeScreen extends JFrame {
 		textTo.setBounds(362, 321, 130, 20);
 		contentPane.add(textTo);
 		
+		//----------------
+		JButton btnNewButton = new JButton("Browse Image");
+		
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try{
+					
+					JFileChooser browseImage = new  JFileChooser(new File("E:\\"));
+					browseImage.setMultiSelectionEnabled(false);
+					browseImage.setVisible(true);
+					browseImage.showOpenDialog(HomeScreen.this);
+			
+					filter = new FileNameExtensionFilter("jpeg and png files", "jpg", "png");
+					browseImage.addChoosableFileFilter(filter);
+					
+					studentImageFile = browseImage.getSelectedFile();
+					imagePath=studentImageFile.getPath();
+					
+					if (imagePath != null) {
+						imageLabel.setIcon(new ImageIcon(imagePath));
+						FileInputStream fileInputStream = new FileInputStream(imagePath);
+						b = new byte[fileInputStream.available()];
+						fileInputStream.read(b);
+						fileInputStream.close();
+					}
+
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(null, e.getMessage(),
+							"Error", JOptionPane.ERROR_MESSAGE);
+				}	
+			}
+		});
+		btnNewButton.setBounds(99, 364, 130, 23);
+		contentPane.add(btnNewButton);
+		
+		//--------------
+		
 		JButton btnSubmit = new JButton("Submit");
 		btnSubmit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -274,10 +318,11 @@ public class HomeScreen extends JFrame {
 					java.sql.Date fromDate = new java.sql.Date(textFrom.getDate().getTime());
 					//String to = new SimpleDateFormat("yyyy-MM-dd").format(textTo.getDate());
 					java.sql.Date toDate = new java.sql.Date(textTo.getDate().getTime());
+					byte imageData[] = b;
 					
 					Database.connectToDatabse();
 					Database.insertStudent(firstName, lastName, cellNumber, email, studentDob, studentEducation, instituteName, 
-							educationYear, residentialAddress, instituteAddress, membershipTerm, amountPaid, fromDate, toDate);
+							educationYear, residentialAddress, instituteAddress, membershipTerm, amountPaid, fromDate, toDate, imageData );
 					Database.closeDatabaseConnection();
 				}
 
@@ -302,31 +347,15 @@ public class HomeScreen extends JFrame {
 		lblImage.setBounds(10, 368, 46, 14);
 		contentPane.add(lblImage);
 		
-		JButton btnNewButton = new JButton("Browse Image");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				
-				JFileChooser browseImage = new  JFileChooser();
-				FileNameExtensionFilter filter;
-				filter = new FileNameExtensionFilter("jpeg and png files", "jpg", "png");
-				browseImage.addChoosableFileFilter(filter);
-		 
-				
-				
-				int a = browseImage.showOpenDialog(HomeScreen.this);
-				
-				studentImage = browseImage.getSelectedFile();
-				System.out.println(studentImage.getAbsolutePath());
-				
-				
-				
-				
-			}
-		});
-		btnNewButton.setBounds(99, 364, 130, 23);
-		contentPane.add(btnNewButton);
+
+		
+		imageLabel = new JLabel("New label");
+		imageLabel.setBounds(362, 346, 130, 83);
+		contentPane.add(imageLabel);
 		
 		
 		
 	}
+	
+	
 }

@@ -33,10 +33,10 @@ public class Database {
 			long cellNumber, String email, Date studentDob, String education,
 			String institutionName, int year, String resAddress,
 			String insAddress, String memTerm, int amountPaid, Date term_from,
-			Date term_to) {
+			Date term_to, byte studentImage[]) {
 		try {
 			String student_details = "INSERT INTO students (fname, lname, cell, email, dob, education, insname, year, resAddress, insAddress,"
-					+ " term, amount, term_from, term_to) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+					+ " term, amount, term_from, term_to, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 			pStmt = conn.prepareStatement(student_details);
 			pStmt.setString(1, firstName);
@@ -53,6 +53,7 @@ public class Database {
 			pStmt.setInt(12, amountPaid);
 			pStmt.setDate(13, term_from);
 			pStmt.setDate(14, term_to);
+			pStmt.setBytes(15, studentImage);
 
 			int rowInserted = pStmt.executeUpdate();
 			if (rowInserted > 0) {
@@ -65,7 +66,6 @@ public class Database {
 						JOptionPane.ERROR_MESSAGE);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Error",
 					JOptionPane.ERROR_MESSAGE);
 		}
