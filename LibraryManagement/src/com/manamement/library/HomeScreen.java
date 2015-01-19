@@ -5,9 +5,12 @@ import java.awt.KeyboardFocusManager;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.EtchedBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.AbstractDocument;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -16,6 +19,7 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JButton;
+import javax.swing.SwingConstants;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -27,7 +31,10 @@ import javax.swing.JTextArea;
 import com.toedter.calendar.JYearChooser;
 import com.toedter.calendar.JDateChooser;
 
-import javax.swing.JInternalFrame;
+
+
+import java.awt.Color;
+
 
 public class HomeScreen extends JFrame {
 
@@ -59,7 +66,7 @@ public class HomeScreen extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+/*	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -71,7 +78,7 @@ public class HomeScreen extends JFrame {
 				}
 			}
 		});
-	}
+	}*/
 
 	/**
 	 * Create the frame.
@@ -229,9 +236,16 @@ public class HomeScreen extends JFrame {
 		textTo.setBounds(362, 321, 130, 20);
 		contentPane.add(textTo);
 		
+		imageLabel = new JLabel("Student Image");
+		imageLabel.setForeground(Color.BLACK);
+		imageLabel.setBounds(362, 346, 130, 83);
+		imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		Border border = BorderFactory.createLineBorder(Color.BLACK, 1, true);
+		imageLabel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		contentPane.add(imageLabel);
+		
 		//----------------
 		JButton btnNewButton = new JButton("Browse Image");
-		
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try{
@@ -243,7 +257,7 @@ public class HomeScreen extends JFrame {
 			
 					filter = new FileNameExtensionFilter("jpeg and png files", "jpg", "png");
 					browseImage.addChoosableFileFilter(filter);
-					
+	
 					studentImageFile = browseImage.getSelectedFile();
 					imagePath=studentImageFile.getPath();
 					
@@ -254,7 +268,6 @@ public class HomeScreen extends JFrame {
 						fileInputStream.read(b);
 						fileInputStream.close();
 					}
-
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(null, e.getMessage(),
 							"Error", JOptionPane.ERROR_MESSAGE);
@@ -343,17 +356,9 @@ public class HomeScreen extends JFrame {
 		viewrecordButton.setLocation(600, 50);
 		contentPane.add(viewrecordButton);
 		
-		JLabel lblImage = new JLabel("Image");
+		JLabel lblImage = new JLabel("Photo");
 		lblImage.setBounds(10, 368, 46, 14);
 		contentPane.add(lblImage);
-		
-
-		
-		imageLabel = new JLabel("New label");
-		imageLabel.setBounds(362, 346, 130, 83);
-		contentPane.add(imageLabel);
-		
-		
 		
 	}
 	
